@@ -1,7 +1,13 @@
 package main
 
-import "fmt"
+import (
+    "flag"
+    "fmt"
+)
 
 func main() {
-    fmt.Println("Hello, World!")
+    date := flag.String("date", "Jan-01", "Date to solve for")
+    flag.Parse()
+
+    fmt.Println("Solving a-puzzle-a-day for", *date)
 }
