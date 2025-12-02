@@ -7,7 +7,7 @@ import (
 )
 
 import (
-    "github.com/RossDuquette/a-puzzle-a-day/internal/solver"
+    "a-puzzle-a-day/internal/solver"
 )
 
 func is_valid_date(date string) bool {
