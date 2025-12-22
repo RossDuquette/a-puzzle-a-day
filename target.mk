@@ -1,5 +1,8 @@
-build:
+build: format
 	go build -v -buildvcs=false
 
-test:
+test: format
 	go test -v
+
+format:
+	@go fmt
