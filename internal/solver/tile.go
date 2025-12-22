@@ -4,8 +4,6 @@ import (
 	"fmt"
 )
 
-const vacant_tile string = ""
-
 type Tile struct {
 	name string
 	shape string
