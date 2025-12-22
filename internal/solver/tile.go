@@ -60,9 +60,11 @@ func (t *Tile) flip() {
 }
 
 func get_tiles() map[TileName]Tile {
+	// Shapes are rotated/flipped such that they can be placed in the top-left
+	// available square.
 	tiles := map[TileName]Tile {
-		"s": { name: "s", shape: "ldll",  rotations: 3, flippable: true },
-		"y": { name: "y", shape: "rrudr", rotations: 3, flippable: true },
+		"s": { name: "s", shape: "rdrr",  rotations: 3, flippable: true },
+		"y": { name: "y", shape: "rrdur", rotations: 3, flippable: true },
 		"z": { name: "z", shape: "rddr",  rotations: 1, flippable: true },
 		"u": { name: "u", shape: "drru",  rotations: 3, flippable: false },
 		"p": { name: "p", shape: "rdld",  rotations: 3, flippable: true },

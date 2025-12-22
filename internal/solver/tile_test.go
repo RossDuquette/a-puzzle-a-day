@@ -43,9 +43,9 @@ func TestTileFlipY(t *testing.T) {
 		flip bool
 		shape string
 	}{
-		{false, "rrudr"},
-		{true, "lludl"},
-		{true, "rrudr"},
+		{false, "rrdur"},
+		{true, "lldul"},
+		{true, "rrdur"},
 	}
 
 	for i, test := range tests {
