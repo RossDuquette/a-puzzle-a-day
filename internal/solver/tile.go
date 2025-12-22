@@ -4,12 +4,10 @@ import (
 	"fmt"
 )
 
-type TileName string
-
-const vacant_tile TileName = ""
+const vacant_tile string = ""
 
 type Tile struct {
-	name TileName
+	name string
 	shape string
 	rotations uint
 	flippable bool
@@ -59,10 +57,10 @@ func (t *Tile) flip() {
 	t.shape = new_shape
 }
 
-func get_tiles() map[TileName]Tile {
+func get_tiles() map[string]Tile {
 	// Shapes are rotated/flipped such that they can be placed in the top-left
 	// available square.
-	tiles := map[TileName]Tile {
+	tiles := map[string]Tile {
 		"s": { name: "s", shape: "rdrr",  rotations: 3, flippable: true },
 		"y": { name: "y", shape: "rrdur", rotations: 3, flippable: true },
 		"z": { name: "z", shape: "rddr",  rotations: 1, flippable: true },
