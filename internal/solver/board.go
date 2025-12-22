@@ -9,25 +9,25 @@ const (
 	width int = 7
 )
 
-type cell struct {
+type Cell struct {
 	name string
-	covered_by tile_id
+	covered_by TileName
 }
 
-func (c cell) print() {
-	if c.covered_by == tile_vacant {
+func (c Cell) print() {
+	if c.covered_by == vacant_tile {
 		fmt.Printf("%-5s", c.name)
 	} else {
 		fmt.Printf("%-5s", c.covered_by)
 	}
 }
 
-type board struct {
-	cells [height][width]cell
+type Board struct {
+	cells [height][width]Cell
 }
 
-func newBoard() *board {
-	var b board
+func newBoard() *Board {
+	var b Board
 	cell_names := [height][width]string {
 		{ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "" },
 		{ "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "" },
@@ -41,13 +41,13 @@ func newBoard() *board {
 		for col := range width {
 			cell := &b.cells[row][col]
 			cell.name = cell_names[row][col]
-			cell.covered_by = tile_vacant
+			cell.covered_by = vacant_tile
 		}
 	}
 	return &b
 }
 
-func (b board) print() {
+func (b Board) print() {
 	for row := range height {
 		for col := range width {
 			b.cells[row][col].print()

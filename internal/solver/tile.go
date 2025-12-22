@@ -4,20 +4,20 @@ import (
 	"fmt"
 )
 
-type tile_id string
+type TileName string
 
-const tile_vacant tile_id = ""
+const vacant_tile TileName = ""
 
-type tile struct {
-	id tile_id
+type Tile struct {
+	name TileName
 	shape string
 	rotations uint
 	flippable bool
 }
 
-func (t *tile) rotate_cw(rotations uint) {
+func (t *Tile) rotate_cw(rotations uint) {
 	if rotations > t.rotations {
-		msg := fmt.Sprintf("Cannot rotate %s %d times", t.id, rotations)
+		msg := fmt.Sprintf("Cannot rotate %s %d times", t.name, rotations)
 		panic(msg)
 	}
 	new_shape := ""
@@ -40,7 +40,7 @@ func (t *tile) rotate_cw(rotations uint) {
 	t.shape = new_shape
 }
 
-func (t *tile) flip() {
+func (t *Tile) flip() {
 	new_shape := ""
 	for _, c := range t.shape {
 		switch c {
@@ -59,16 +59,16 @@ func (t *tile) flip() {
 	t.shape = new_shape
 }
 
-func get_tiles() map[tile_id]tile {
-	tiles := map[tile_id]tile {
-		"s": { id: "s", shape: "ldll",  rotations: 3, flippable: true },
-		"y": { id: "y", shape: "rrudr", rotations: 3, flippable: true },
-		"z": { id: "z", shape: "rddr",  rotations: 1, flippable: true },
-		"u": { id: "u", shape: "drru",  rotations: 3, flippable: false },
-		"p": { id: "p", shape: "rdld",  rotations: 3, flippable: true },
-		"l": { id: "l", shape: "dddr",  rotations: 3, flippable: true },
-		"v": { id: "v", shape: "ddrr",  rotations: 3, flippable: false },
-		"b": { id: "b", shape: "ddruu", rotations: 1, flippable: false },
+func get_tiles() map[TileName]Tile {
+	tiles := map[TileName]Tile {
+		"s": { name: "s", shape: "ldll",  rotations: 3, flippable: true },
+		"y": { name: "y", shape: "rrudr", rotations: 3, flippable: true },
+		"z": { name: "z", shape: "rddr",  rotations: 1, flippable: true },
+		"u": { name: "u", shape: "drru",  rotations: 3, flippable: false },
+		"p": { name: "p", shape: "rdld",  rotations: 3, flippable: true },
+		"l": { name: "l", shape: "dddr",  rotations: 3, flippable: true },
+		"v": { name: "v", shape: "ddrr",  rotations: 3, flippable: false },
+		"b": { name: "b", shape: "ddruu", rotations: 1, flippable: false },
 	}
 	return tiles
 }
