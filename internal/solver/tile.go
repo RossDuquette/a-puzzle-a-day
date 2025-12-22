@@ -7,28 +7,28 @@ import (
 type Tile struct {
 	name string
 	shape string
-	rotations uint
-	flippable bool
+	num_rotations uint
+	num_flips uint
 }
 
 func get_tiles() map[string]Tile {
 	// Shapes are rotated/flipped such that they can be placed in the top-left
 	// available square.
 	tiles := map[string]Tile {
-		"s": { name: "s", shape: "rdrr",  rotations: 3, flippable: true },
-		"y": { name: "y", shape: "rrdur", rotations: 3, flippable: true },
-		"z": { name: "z", shape: "rddr",  rotations: 1, flippable: true },
-		"u": { name: "u", shape: "drru",  rotations: 3, flippable: false },
-		"p": { name: "p", shape: "rdld",  rotations: 3, flippable: true },
-		"l": { name: "l", shape: "dddr",  rotations: 3, flippable: true },
-		"v": { name: "v", shape: "ddrr",  rotations: 3, flippable: false },
-		"b": { name: "b", shape: "ddruu", rotations: 1, flippable: false },
+		"s": { name: "s", shape: "rdrr",  num_rotations: 4, num_flips: 2 },
+		"y": { name: "y", shape: "rrdur", num_rotations: 4, num_flips: 2 },
+		"z": { name: "z", shape: "rddr",  num_rotations: 2, num_flips: 2 },
+		"u": { name: "u", shape: "drru",  num_rotations: 4, num_flips: 1 },
+		"p": { name: "p", shape: "rdld",  num_rotations: 4, num_flips: 2 },
+		"l": { name: "l", shape: "dddr",  num_rotations: 4, num_flips: 2 },
+		"v": { name: "v", shape: "ddrr",  num_rotations: 4, num_flips: 1 },
+		"b": { name: "b", shape: "ddruu", num_rotations: 2, num_flips: 1 },
 	}
 	return tiles
 }
 
 func (t *Tile) rotate_cw(rotations uint) {
-	if rotations > t.rotations {
+	if rotations >= t.num_rotations {
 		msg := fmt.Sprintf("Cannot rotate %s %d times", t.name, rotations)
 		panic(msg)
 	}
