@@ -26,7 +26,8 @@ func place_tiles_on(board *Board) {
 								fmt.Println("Solved!")
 								board.print()
 							} else {
-								place_tiles_on(board)
+								new_board := board.copy()
+								go place_tiles_on(&new_board)
 								*board = orig_board.copy()
 							}
 						}
