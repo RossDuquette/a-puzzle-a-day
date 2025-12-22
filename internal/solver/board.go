@@ -65,3 +65,10 @@ func (b Board) print() {
 		fmt.Println()
 	}
 }
+
+func (b Board) has_point(point Point) bool {
+	return point.x >= 0 &&
+		point.x < board_width &&
+		point.y >= 0 &&
+		point.y < board_height
+}
