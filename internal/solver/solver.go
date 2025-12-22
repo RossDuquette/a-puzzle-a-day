@@ -14,55 +14,47 @@ func Solve(month string, day string) bool {
 func place_first_tile_on(board *Board) {
 	orig_board := board.copy()
 	tiles := get_tiles()
+	tile := tiles["b"]
+	delete(tiles, "b")
 	var threads sync.WaitGroup
-	for _, tile := range tiles {
-		for range tile.num_flips {
-			for range tile.num_rotations {
-				for row, line := range board.cells {
-					for col := range line {
-						if place_tile_on_board_at(&tile, board, row, col) {
-							new_board := board.copy()
-							threads.Go(func() {
-								place_tiles_on(&new_board)
-							})
-							*board = orig_board.copy()
-						}
-					}
+	for range tile.num_rotations {
+		for row, line := range board.cells {
+			for col := range line {
+				if place_tile_on_board_at(&tile, board, row, col) {
+					new_board := board.copy()
+					threads.Go(func() {
+						place_next_tile_on_board(&tiles, &new_board)
+					})
+					*board = orig_board.copy()
 				}
-				tile.rotate_cw(1)
 			}
-			tile.flip()
 		}
+		tile.rotate_cw(1)
 	}
 	threads.Wait()
 }
 
-func place_tiles_on(board *Board) {
+func place_next_tile_on_board(tiles *map[string]Tile, board *Board) {
+	tile := get_next_tile(tiles, board)
 	orig_board := board.copy()
-	tiles := get_tiles()
-	for _, tile := range tiles {
-		if board.has_tile(tile) {
-			continue
-		}
-		for range tile.num_flips {
-			for range tile.num_rotations {
-				for row, line := range board.cells {
-					for col := range line {
-						if place_tile_on_board_at(&tile, board, row, col) {
-							if is_solved(board) {
-								fmt.Println("Solved!")
-								board.print()
-							} else {
-								place_tiles_on(board)
-								*board = orig_board.copy()
-							}
+	for range tile.num_flips {
+		for range tile.num_rotations {
+			for row, line := range board.cells {
+				for col := range line {
+					if place_tile_on_board_at(&tile, board, row, col) {
+						if is_solved(board) {
+							fmt.Println("Solved!")
+							board.print()
+						} else {
+							place_next_tile_on_board(tiles, board)
+							*board = orig_board.copy()
 						}
 					}
 				}
-				tile.rotate_cw(1)
 			}
-			tile.flip()
+			tile.rotate_cw(1)
 		}
+		tile.flip()
 	}
 }
 
@@ -86,6 +78,15 @@ func place_tile_on_board_at(tile *Tile, board *Board, row int, col int) bool {
 		cell.covered_by = tile.name
 	}
 	return true
+}
+
+func get_next_tile(tiles *map[string]Tile, board *Board) Tile {
+	for _, tile := range *tiles {
+		if !board.has_tile(tile) {
+			return tile
+		}
+	}
+	return (*tiles)["b"]
 }
 
 func is_solved(board *Board) bool {
