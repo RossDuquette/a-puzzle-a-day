@@ -89,3 +89,54 @@ func TestTileRotationFlipZ(t *testing.T) {
 		})
 	}
 }
+
+func TestTilePointsP(t *testing.T) {
+	tiles := get_tiles()
+	p := tiles["p"]
+	points := p.get_points()
+
+	expected_points := []Point{
+		{0, 0},
+		{1, 0},
+		{1, 1},
+		{0, 1},
+		{0, 2},
+	}
+
+	if len(points) != 5 {
+		t.Errorf("Shape has %d points", len(points))
+	}
+
+	for i := range points {
+		if points[i] != expected_points[i] {
+			t.Errorf("Got point (%d, %d), expected (%d, %d)",
+					 points[i].x, points[i].y, expected_points[i].x, expected_points[i].y)
+		}
+	}
+}
+
+func TestTilePointsPRotated(t *testing.T) {
+	tiles := get_tiles()
+	p := tiles["p"]
+	p.rotate_cw(2)
+	points := p.get_points()
+
+	expected_points := []Point{
+		{0, 2},
+		{-1, 2},
+		{-1, 1},
+		{0, 1},
+		{0, 0},
+	}
+
+	if len(points) != 5 {
+		t.Errorf("Shape has %d points", len(points))
+	}
+
+	for i := range points {
+		if points[i] != expected_points[i] {
+			t.Errorf("Got point (%d, %d), expected (%d, %d)",
+					 points[i].x, points[i].y, expected_points[i].x, expected_points[i].y)
+		}
+	}
+}
