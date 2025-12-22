@@ -82,3 +82,15 @@ func (b Board) has_point(point Point) bool {
 		point.y >= 0 &&
 		point.y < board_height
 }
+
+func (b Board) has_tile(tile Tile) bool {
+	for row := range board_height {
+		for col := range board_width {
+			cell := &b.cells[row][col]
+			if cell.covered_by == tile.name {
+				return true
+			}
+		}
+	}
+	return false
+}

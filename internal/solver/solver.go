@@ -5,26 +5,38 @@ import (
 )
 
 func Solve(month string, day string) bool {
-	tiles := get_tiles()
 	board := newBoard(month, day)
-	for _, tile := range tiles {
-		place_tile_on_board(&tile, &board)
-	}
-	board.print()
-
-    fmt.Println("Solved", month, day)
+	place_tiles_on(&board)
     return true
 }
 
-func place_tile_on_board(tile *Tile, board *Board) bool {
-	for row, line := range board.cells {
-		for col := range line {
-			if place_tile_on_board_at(tile, board, row, col) {
-				return true
+func place_tiles_on(board *Board) {
+	orig_board := board.copy()
+	tiles := get_tiles()
+	for _, tile := range tiles {
+		if board.has_tile(tile) {
+			continue
+		}
+		for range tile.num_flips {
+			for range tile.num_rotations {
+				for row, line := range board.cells {
+					for col := range line {
+						if place_tile_on_board_at(&tile, board, row, col) {
+							if is_solved(board) {
+								fmt.Println("Solved!")
+								board.print()
+							} else {
+								place_tiles_on(board)
+								*board = orig_board.copy()
+							}
+						}
+					}
+				}
+				tile.rotate_cw(1)
 			}
+			tile.flip()
 		}
 	}
-	return false
 }
 
 func place_tile_on_board_at(tile *Tile, board *Board, row int, col int) bool {
@@ -45,6 +57,17 @@ func place_tile_on_board_at(tile *Tile, board *Board, row int, col int) bool {
 		point.y += row
 		cell := &board.cells[point.y][point.x]
 		cell.covered_by = tile.name
+	}
+	return true
+}
+
+func is_solved(board *Board) bool {
+	for _, line := range board.cells {
+		for _, cell := range line {
+			if cell.is_free() {
+				return false
+			}
+		}
 	}
 	return true
 }
