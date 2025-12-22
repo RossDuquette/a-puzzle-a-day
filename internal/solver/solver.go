@@ -1,13 +1,40 @@
 package solver
 
 import (
-    "fmt"
+	"fmt"
+	"sync"
 )
 
 func Solve(month string, day string) bool {
 	board := newBoard(month, day)
-	place_tiles_on(&board)
+	place_first_tile_on(&board)
     return true
+}
+
+func place_first_tile_on(board *Board) {
+	orig_board := board.copy()
+	tiles := get_tiles()
+	var threads sync.WaitGroup
+	for _, tile := range tiles {
+		for range tile.num_flips {
+			for range tile.num_rotations {
+				for row, line := range board.cells {
+					for col := range line {
+						if place_tile_on_board_at(&tile, board, row, col) {
+							new_board := board.copy()
+							threads.Go(func() {
+								place_tiles_on(&new_board)
+							})
+							*board = orig_board.copy()
+						}
+					}
+				}
+				tile.rotate_cw(1)
+			}
+			tile.flip()
+		}
+	}
+	threads.Wait()
 }
 
 func place_tiles_on(board *Board) {
@@ -26,8 +53,7 @@ func place_tiles_on(board *Board) {
 								fmt.Println("Solved!")
 								board.print()
 							} else {
-								new_board := board.copy()
-								go place_tiles_on(&new_board)
+								place_tiles_on(board)
 								*board = orig_board.copy()
 							}
 						}
