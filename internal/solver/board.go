@@ -56,6 +56,16 @@ func newBoard(month string, day string) Board {
 	return b
 }
 
+func (b Board) copy() Board {
+	var new_board Board
+	for row := range board_height {
+		for col := range board_width {
+			new_board.cells[row][col] = b.cells[row][col]
+		}
+	}
+	return new_board
+}
+
 func (b Board) print() {
 	for row := range board_height {
 		for col := range board_width {
