@@ -44,6 +44,7 @@ func place_first_tile_on(board *Board, solutions chan Board) {
 func place_next_tile_on_board(tiles map[string]Tile, board *Board, solutions chan Board) {
 	tile := get_next_tile(tiles, board)
 	orig_board := board.copy()
+	var threads sync.WaitGroup
 	for range tile.num_flips {
 		for range tile.num_rotations {
 			for row, line := range board.cells {
@@ -52,7 +53,10 @@ func place_next_tile_on_board(tiles map[string]Tile, board *Board, solutions cha
 						if is_solved(board) {
 							solutions <- *board
 						} else {
-							place_next_tile_on_board(tiles, board, solutions)
+							new_board := board.copy()
+							threads.Go(func() {
+								place_next_tile_on_board(tiles, &new_board, solutions)
+							})
 							*board = orig_board.copy()
 						}
 					}
@@ -62,6 +66,7 @@ func place_next_tile_on_board(tiles map[string]Tile, board *Board, solutions cha
 		}
 		tile.flip()
 	}
+	threads.Wait()
 }
 
 func place_tile_on_board_at(tile *Tile, board *Board, row int, col int) bool {
