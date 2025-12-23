@@ -30,7 +30,7 @@ func place_first_tile_on(board *Board, solutions chan Board) {
 				if place_tile_on_board_at(&tile, board, row, col) {
 					new_board := board.copy()
 					threads.Go(func() {
-						place_next_tile_on_board(&tiles, &new_board, solutions)
+						place_next_tile_on_board(tiles, &new_board, solutions)
 					})
 					*board = orig_board.copy()
 				}
@@ -41,7 +41,7 @@ func place_first_tile_on(board *Board, solutions chan Board) {
 	threads.Wait()
 }
 
-func place_next_tile_on_board(tiles *map[string]Tile, board *Board, solutions chan Board) {
+func place_next_tile_on_board(tiles map[string]Tile, board *Board, solutions chan Board) {
 	tile := get_next_tile(tiles, board)
 	orig_board := board.copy()
 	for range tile.num_flips {
@@ -86,13 +86,13 @@ func place_tile_on_board_at(tile *Tile, board *Board, row int, col int) bool {
 	return true
 }
 
-func get_next_tile(tiles *map[string]Tile, board *Board) Tile {
-	for _, tile := range *tiles {
+func get_next_tile(tiles map[string]Tile, board *Board) Tile {
+	for _, tile := range tiles {
 		if !board.has_tile(tile) {
 			return tile
 		}
 	}
-	return (*tiles)["b"]
+	return tiles["b"]
 }
 
 func is_solved(board *Board) bool {
