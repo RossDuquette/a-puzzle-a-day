@@ -94,3 +94,49 @@ func (b Board) has_tile(tile Tile) bool {
 	}
 	return false
 }
+
+func (b Board) is_dead() bool {
+	// Label free spaces with a group number.
+	labels := [board_height][board_width]int{}
+	next_label := 1
+	for row, line := range b.cells {
+		for col, cell := range line {
+			if cell.is_free() && (labels[row][col] == 0) {
+				b.label_group(&labels, next_label, row, col)
+				next_label++
+			}
+		}
+	}
+	// Once all empty spaces are labelled, count the number of cells with each label.
+	label_counters := make(map[int]int)
+	for _, line := range labels {
+		for _, label := range line {
+			if label != 0 {
+				label_counters[label]++
+			}
+		}
+	}
+	// If the number is not a multiple of 5 for EVERY group, then the board has no
+	// solution and is considered dead.
+	for _, count := range label_counters {
+		if (count % 5) != 0 {
+			return true
+		}
+	}
+	return false
+}
+
+func (b Board) label_group(labels *[board_height][board_width]int, label int, row int, col int) {
+	if (row < 0) || (row >= board_height) || (col < 0) || (col >= board_width) ||
+			!b.cells[row][col].is_free() || (labels[row][col] != 0) {
+		return
+	}
+
+	labels[row][col] = label
+
+	// Label all adjacent squares
+	b.label_group(labels, label, row-1, col)
+	b.label_group(labels, label, row+1, col)
+	b.label_group(labels, label, row, col-1)
+	b.label_group(labels, label, row, col+1)
+}

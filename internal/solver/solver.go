@@ -42,6 +42,9 @@ func place_first_tile_on(board *Board, solutions chan Board) {
 }
 
 func place_next_tile_on_board(tiles map[string]Tile, board *Board, solutions chan Board) {
+	if board.is_dead() {
+		return
+	}
 	tile := get_next_tile(tiles, board)
 	orig_board := board.copy()
 	for range tile.num_flips {
