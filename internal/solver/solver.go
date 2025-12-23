@@ -7,11 +7,18 @@ import (
 
 func Solve(month string, day string) bool {
 	board := newBoard(month, day)
-	place_first_tile_on(&board)
-    return true
+	solutions := make(chan Board)
+	var threads sync.WaitGroup
+	threads.Go(func() {
+		handle_solutions(solutions)
+	})
+	place_first_tile_on(&board, solutions)
+	close(solutions)
+	threads.Wait()
+	return true
 }
 
-func place_first_tile_on(board *Board) {
+func place_first_tile_on(board *Board, solutions chan Board) {
 	orig_board := board.copy()
 	tiles := get_tiles()
 	tile := tiles["b"]
@@ -23,7 +30,7 @@ func place_first_tile_on(board *Board) {
 				if place_tile_on_board_at(&tile, board, row, col) {
 					new_board := board.copy()
 					threads.Go(func() {
-						place_next_tile_on_board(&tiles, &new_board)
+						place_next_tile_on_board(&tiles, &new_board, solutions)
 					})
 					*board = orig_board.copy()
 				}
@@ -34,7 +41,7 @@ func place_first_tile_on(board *Board) {
 	threads.Wait()
 }
 
-func place_next_tile_on_board(tiles *map[string]Tile, board *Board) {
+func place_next_tile_on_board(tiles *map[string]Tile, board *Board, solutions chan Board) {
 	tile := get_next_tile(tiles, board)
 	orig_board := board.copy()
 	for range tile.num_flips {
@@ -43,10 +50,9 @@ func place_next_tile_on_board(tiles *map[string]Tile, board *Board) {
 				for col := range line {
 					if place_tile_on_board_at(&tile, board, row, col) {
 						if is_solved(board) {
-							fmt.Println("Solved!")
-							board.print()
+							solutions <- *board
 						} else {
-							place_next_tile_on_board(tiles, board)
+							place_next_tile_on_board(tiles, board, solutions)
 							*board = orig_board.copy()
 						}
 					}
@@ -98,4 +104,18 @@ func is_solved(board *Board) bool {
 		}
 	}
 	return true
+}
+
+func handle_solutions(solutions chan Board) {
+	num_solutions := 0
+	for board := range solutions {
+		handle_solved_board(board)
+		num_solutions++
+	}
+	fmt.Println("Found", num_solutions, "total solutions")
+}
+
+func handle_solved_board(board Board) {
+	fmt.Println("Solved!")
+	board.print()
 }
