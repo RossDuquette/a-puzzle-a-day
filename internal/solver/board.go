@@ -66,14 +66,16 @@ func (b Board) copy() Board {
 	return new_board
 }
 
-func (b Board) print() {
+func (b Board) String() string {
+	var str string
 	for row := range board_height {
 		for col := range board_width {
 			cell := b.cells[row][col]
-			fmt.Printf("%-5s", cell.showing())
+			str = fmt.Sprintf("%s%-5s", str, cell.showing())
 		}
-		fmt.Println()
+		str = fmt.Sprintf("%s\n", str)
 	}
+	return str
 }
 
 func (b Board) has_point(point Point) bool {

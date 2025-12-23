@@ -15,5 +15,5 @@ func handle_solutions(solutions chan Board) {
 
 func handle_solved_board(board Board) {
 	fmt.Println("Solved!")
-	board.print()
+	fmt.Println(board)
 }
