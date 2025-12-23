@@ -17,7 +17,7 @@ func Solve(month string, day string) bool {
 	return true
 }
 
-func place_first_tile_on(board *Board, solutions chan Board) {
+func place_first_tile_on(board *Board, solutions chan<- Board) {
 	orig_board := board.copy()
 	tiles := get_tiles()
 	tile := tiles["b"]
@@ -40,7 +40,7 @@ func place_first_tile_on(board *Board, solutions chan Board) {
 	threads.Wait()
 }
 
-func place_next_tile_on_board(tiles map[string]Tile, board *Board, solutions chan Board) {
+func place_next_tile_on_board(tiles map[string]Tile, board *Board, solutions chan<- Board) {
 	if board.is_dead() {
 		return
 	}

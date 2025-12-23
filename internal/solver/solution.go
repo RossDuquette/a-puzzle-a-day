@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-func handle_solutions(solutions chan Board) {
+func handle_solutions(solutions <-chan Board) {
 	num_solutions := 0
 	for board := range solutions {
 		handle_solved_board(board)
