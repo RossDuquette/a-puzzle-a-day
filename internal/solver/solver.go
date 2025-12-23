@@ -4,17 +4,16 @@ import (
 	"sync"
 )
 
-func Solve(month string, day string) bool {
+func Solve(month string, day string, save_to_files bool) {
 	board := newBoard(month, day)
 	solutions := make(chan Board)
 	var threads sync.WaitGroup
 	threads.Go(func() {
-		handle_solutions(solutions)
+		handle_solutions(solutions, save_to_files)
 	})
 	place_first_tile_on(&board, solutions)
 	close(solutions)
 	threads.Wait()
-	return true
 }
 
 func place_first_tile_on(board *Board, solutions chan<- Board) {

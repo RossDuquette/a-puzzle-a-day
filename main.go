@@ -23,12 +23,13 @@ func extract_month_day(date string) (month string, day string) {
 
 func main() {
 	date := flag.String("date", "Jan-01", "Date to solve for")
+	save_to_files := flag.Bool("to-file", false, "Save solutions to files")
 	flag.Parse()
 
 	if is_valid_date(*date) {
 		month, day := extract_month_day(*date)
 		fmt.Println("Solving a-puzzle-a-day for", month, day)
-		solver.Solve(month, day)
+		solver.Solve(month, day, *save_to_files)
 	} else {
 		fmt.Println("Invalid date:", *date)
 	}
