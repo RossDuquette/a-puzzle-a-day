@@ -8,7 +8,6 @@ const (
 	board_height int = 7
 	board_width int = 7
 	vacant_cell string = "vacant"
-	solution_cell string = "solution"
 )
 
 type Cell struct {
@@ -17,7 +16,7 @@ type Cell struct {
 }
 
 func (c Cell) showing() string {
-	if c.covered_by == vacant_cell || c.covered_by == solution_cell {
+	if c.covered_by == vacant_cell {
 		return c.name
 	}
 	return c.covered_by
@@ -29,10 +28,14 @@ func (c Cell) is_free() bool {
 
 type Board struct {
 	cells [board_height][board_width]Cell
+	solution_month string
+	solution_day string
 }
 
 func newBoard(month string, day string) Board {
 	var b Board
+	b.solution_month = month
+	b.solution_day = day
 	cell_names := [board_height][board_width]string {
 		{ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "" },
 		{ "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "" },
@@ -47,7 +50,7 @@ func newBoard(month string, day string) Board {
 			cell := &b.cells[row][col]
 			cell.name = cell_names[row][col]
 			if cell.name == month || cell.name == day {
-				cell.covered_by = solution_cell
+				cell.covered_by = cell.name
 			} else {
 				cell.covered_by = vacant_cell
 			}
@@ -58,6 +61,8 @@ func newBoard(month string, day string) Board {
 
 func (b Board) copy() Board {
 	var new_board Board
+	new_board.solution_month = b.solution_month
+	new_board.solution_day = b.solution_day
 	for row := range board_height {
 		for col := range board_width {
 			new_board.cells[row][col] = b.cells[row][col]
