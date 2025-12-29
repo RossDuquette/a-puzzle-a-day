@@ -8,6 +8,7 @@ import (
 
 import (
 	"a-puzzle-a-day/internal/solver"
+	"a-puzzle-a-day/internal/verifier"
 )
 
 func is_valid_date(date string) bool {
@@ -24,12 +25,17 @@ func extract_month_day(date string) (month string, day string) {
 func main() {
 	date := flag.String("date", "Jan-01", "Date to solve for")
 	save_to_files := flag.Bool("to-file", false, "Save solutions to files")
+	verify := flag.Bool("verify", false, "Verify that solution files are unique")
 	flag.Parse()
 
 	if is_valid_date(*date) {
 		month, day := extract_month_day(*date)
-		fmt.Println("Solving a-puzzle-a-day for", month, day)
-		solver.Solve(month, day, *save_to_files)
+		if *verify {
+			verifier.CheckUniqueness(month, day)
+		} else {
+			fmt.Println("Solving a-puzzle-a-day for", month, day)
+			solver.Solve(month, day, *save_to_files)
+		}
 	} else {
 		fmt.Println("Invalid date:", *date)
 	}

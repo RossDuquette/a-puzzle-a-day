@@ -17,7 +17,7 @@ func handle_solutions(solutions <-chan Board, save_to_files bool) {
 func handle_solved_board(board Board, save_to_files bool, solution_num int) {
 	if save_to_files {
 		// Create dir
-		dir := fmt.Sprintf("solutions/%s-%s", board.solution_month, board.solution_day)
+		dir := GetSolutionDir(board.solution_month, board.solution_day)
 		os.MkdirAll(dir, 0755)
 
 		// Create file
@@ -33,4 +33,8 @@ func handle_solved_board(board Board, save_to_files bool, solution_num int) {
 		fmt.Println("Solved!")
 		fmt.Println(board)
 	}
+}
+
+func GetSolutionDir(month string, day string) string {
+	return fmt.Sprintf("solutions/%s-%s", month, day)
 }
