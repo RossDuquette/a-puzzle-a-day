@@ -5,7 +5,7 @@ import (
 )
 
 func Solve(month string, day string, save_to_files bool) {
-	board := newBoard(month, day)
+	board := create_board(month, day)
 	solutions := make(chan Board)
 	var threads sync.WaitGroup
 	threads.Go(func() {
