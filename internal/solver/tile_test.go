@@ -6,7 +6,7 @@ import (
 )
 
 func TestTileRotationV(t *testing.T) {
-	tiles := get_tiles()
+	tiles := getTiles()
 	v := tiles["v"]
 
 	tests := []struct {
@@ -25,9 +25,9 @@ func TestTileRotationV(t *testing.T) {
 	}
 
 	for i, test := range tests {
-		test_name := fmt.Sprintf("%d", i)
-		t.Run(test_name, func(t *testing.T) {
-			v.rotate_cw(test.rotations)
+		testName := fmt.Sprintf("%d", i)
+		t.Run(testName, func(t *testing.T) {
+			v.rotateCW(test.rotations)
 			if v.shape != test.shape {
 				t.Errorf("%d - Expected %s, got %s", i, test.shape, v.shape)
 			}
@@ -36,7 +36,7 @@ func TestTileRotationV(t *testing.T) {
 }
 
 func TestTileFlipY(t *testing.T) {
-	tiles := get_tiles()
+	tiles := getTiles()
 	y := tiles["y"]
 
 	tests := []struct {
@@ -49,8 +49,8 @@ func TestTileFlipY(t *testing.T) {
 	}
 
 	for i, test := range tests {
-		test_name := fmt.Sprintf("%d", i)
-		t.Run(test_name, func(t *testing.T) {
+		testName := fmt.Sprintf("%d", i)
+		t.Run(testName, func(t *testing.T) {
 			if test.flip {
 				y.flip()
 			}
@@ -62,7 +62,7 @@ func TestTileFlipY(t *testing.T) {
 }
 
 func TestTileRotationFlipZ(t *testing.T) {
-	tiles := get_tiles()
+	tiles := getTiles()
 	z := tiles["z"]
 
 	tests := []struct {
@@ -77,12 +77,12 @@ func TestTileRotationFlipZ(t *testing.T) {
 	}
 
 	for i, test := range tests {
-		test_name := fmt.Sprintf("%d", i)
-		t.Run(test_name, func(t *testing.T) {
+		testName := fmt.Sprintf("%d", i)
+		t.Run(testName, func(t *testing.T) {
 			if test.flip {
 				z.flip()
 			}
-			z.rotate_cw(test.rotations)
+			z.rotateCW(test.rotations)
 			if z.shape != test.shape {
 				t.Errorf("%d - Expected %s, got %s", i, test.shape, z.shape)
 			}
@@ -91,11 +91,11 @@ func TestTileRotationFlipZ(t *testing.T) {
 }
 
 func TestTilePointsP(t *testing.T) {
-	tiles := get_tiles()
+	tiles := getTiles()
 	p := tiles["p"]
-	points := p.get_points()
+	points := p.getPoints()
 
-	expected_points := []Point{
+	expectedPoints := []Point{
 		{0, 0},
 		{1, 0},
 		{1, 1},
@@ -108,20 +108,20 @@ func TestTilePointsP(t *testing.T) {
 	}
 
 	for i := range points {
-		if points[i] != expected_points[i] {
+		if points[i] != expectedPoints[i] {
 			t.Errorf("Got point (%d, %d), expected (%d, %d)",
-				points[i].x, points[i].y, expected_points[i].x, expected_points[i].y)
+				points[i].x, points[i].y, expectedPoints[i].x, expectedPoints[i].y)
 		}
 	}
 }
 
 func TestTilePointsPRotated(t *testing.T) {
-	tiles := get_tiles()
+	tiles := getTiles()
 	p := tiles["p"]
-	p.rotate_cw(2)
-	points := p.get_points()
+	p.rotateCW(2)
+	points := p.getPoints()
 
-	expected_points := []Point{
+	expectedPoints := []Point{
 		{0, 2},
 		{-1, 2},
 		{-1, 1},
@@ -134,9 +134,9 @@ func TestTilePointsPRotated(t *testing.T) {
 	}
 
 	for i := range points {
-		if points[i] != expected_points[i] {
+		if points[i] != expectedPoints[i] {
 			t.Errorf("Got point (%d, %d), expected (%d, %d)",
-				points[i].x, points[i].y, expected_points[i].x, expected_points[i].y)
+				points[i].x, points[i].y, expectedPoints[i].x, expectedPoints[i].y)
 		}
 	}
 }

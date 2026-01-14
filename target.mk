@@ -9,3 +9,6 @@ test: format
 
 format:
 	@go fmt ./...
+
+lint:
+	@go vet

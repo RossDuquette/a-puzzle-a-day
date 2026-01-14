@@ -5,21 +5,21 @@ import (
 )
 
 const (
-	board_height int = 7
-	board_width  int = 7
+	boardHeight int = 7
+	boardWidth  int = 7
 )
 
 type Board struct {
-	cells          [board_height][board_width]Cell
-	solution_month string
-	solution_day   string
+	cells         [boardHeight][boardWidth]Cell
+	solutionMonth string
+	solutionDay   string
 }
 
-func create_board(month string, day string) Board {
+func createBoard(month string, day string) Board {
 	var b Board
-	b.solution_month = month
-	b.solution_day = day
-	cell_names := [board_height][board_width]string{
+	b.solutionMonth = month
+	b.solutionDay = day
+	cellNames := [boardHeight][boardWidth]string{
 		{"Jan", "Feb", "Mar", "Apr", "May", "Jun", ""},
 		{"Jul", "Aug", "Sep", "Oct", "Nov", "Dec", ""},
 		{"01", "02", "03", "04", "05", "06", "07"},
@@ -28,14 +28,14 @@ func create_board(month string, day string) Board {
 		{"22", "23", "24", "25", "26", "27", "28"},
 		{"29", "30", "31", "", "", "", ""},
 	}
-	for row := range board_height {
-		for col := range board_width {
+	for row := range boardHeight {
+		for col := range boardWidth {
 			cell := &b.cells[row][col]
-			cell.name = cell_names[row][col]
+			cell.name = cellNames[row][col]
 			if cell.name == month || cell.name == day {
-				cell.covered_by = cell.name
+				cell.coveredBy = cell.name
 			} else {
-				cell.set_vacant()
+				cell.setVacant()
 			}
 		}
 	}
@@ -43,21 +43,21 @@ func create_board(month string, day string) Board {
 }
 
 func (b Board) copy() Board {
-	var new_board Board
-	new_board.solution_month = b.solution_month
-	new_board.solution_day = b.solution_day
-	for row := range board_height {
-		for col := range board_width {
-			new_board.cells[row][col] = b.cells[row][col]
+	var newBoard Board
+	newBoard.solutionMonth = b.solutionMonth
+	newBoard.solutionDay = b.solutionDay
+	for row := range boardHeight {
+		for col := range boardWidth {
+			newBoard.cells[row][col] = b.cells[row][col]
 		}
 	}
-	return new_board
+	return newBoard
 }
 
 func (b Board) String() string {
 	var str string
-	for row := range board_height {
-		for col := range board_width {
+	for row := range boardHeight {
+		for col := range boardWidth {
 			cell := b.cells[row][col]
 			str = fmt.Sprintf("%s%-5s", str, cell.showing())
 		}
@@ -66,18 +66,18 @@ func (b Board) String() string {
 	return str
 }
 
-func (b Board) has_point(point Point) bool {
+func (b Board) hasPoint(point Point) bool {
 	return point.x >= 0 &&
-		point.x < board_width &&
+		point.x < boardWidth &&
 		point.y >= 0 &&
-		point.y < board_height
+		point.y < boardHeight
 }
 
-func (b Board) has_tile(tile Tile) bool {
-	for row := range board_height {
-		for col := range board_width {
+func (b Board) hasTile(tile Tile) bool {
+	for row := range boardHeight {
+		for col := range boardWidth {
 			cell := &b.cells[row][col]
-			if cell.covered_by == tile.name {
+			if cell.coveredBy == tile.name {
 				return true
 			}
 		}
@@ -85,30 +85,30 @@ func (b Board) has_tile(tile Tile) bool {
 	return false
 }
 
-func (b Board) is_dead() bool {
+func (b Board) isDead() bool {
 	// Label free spaces with a group number.
-	labels := [board_height][board_width]int{}
-	next_label := 1
+	labels := [boardHeight][boardWidth]int{}
+	nextLabel := 1
 	for row, line := range b.cells {
 		for col, cell := range line {
-			if cell.is_free() && (labels[row][col] == 0) {
-				b.label_group(&labels, next_label, row, col)
-				next_label++
+			if cell.isFree() && (labels[row][col] == 0) {
+				b.labelGroup(&labels, nextLabel, row, col)
+				nextLabel++
 			}
 		}
 	}
 	// Once all empty spaces are labelled, count the number of cells with each label.
-	label_counters := make(map[int]int)
+	labelCounters := make(map[int]int)
 	for _, line := range labels {
 		for _, label := range line {
 			if label != 0 {
-				label_counters[label]++
+				labelCounters[label]++
 			}
 		}
 	}
 	// If the number is not a multiple of 5 for EVERY group, then the board has no
 	// solution and is considered dead.
-	for _, count := range label_counters {
+	for _, count := range labelCounters {
 		if (count % 5) != 0 {
 			return true
 		}
@@ -116,17 +116,17 @@ func (b Board) is_dead() bool {
 	return false
 }
 
-func (b Board) label_group(labels *[board_height][board_width]int, label int, row int, col int) {
-	if (row < 0) || (row >= board_height) || (col < 0) || (col >= board_width) ||
-		!b.cells[row][col].is_free() || (labels[row][col] != 0) {
+func (b Board) labelGroup(labels *[boardHeight][boardWidth]int, label int, row int, col int) {
+	if (row < 0) || (row >= boardHeight) || (col < 0) || (col >= boardWidth) ||
+		!b.cells[row][col].isFree() || (labels[row][col] != 0) {
 		return
 	}
 
 	labels[row][col] = label
 
 	// Label all adjacent squares
-	b.label_group(labels, label, row-1, col)
-	b.label_group(labels, label, row+1, col)
-	b.label_group(labels, label, row, col-1)
-	b.label_group(labels, label, row, col+1)
+	b.labelGroup(labels, label, row-1, col)
+	b.labelGroup(labels, label, row+1, col)
+	b.labelGroup(labels, label, row, col-1)
+	b.labelGroup(labels, label, row, col+1)
 }

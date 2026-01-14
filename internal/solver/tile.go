@@ -5,34 +5,34 @@ import (
 )
 
 type Tile struct {
-	name          string
-	shape         string
-	num_rotations uint
-	num_flips     uint
+	name         string
+	shape        string
+	numRotations uint
+	numFlips     uint
 }
 
-func get_tiles() map[string]Tile {
+func getTiles() map[string]Tile {
 	// Shapes are rotated/flipped such that they can be placed in the top-left
 	// available square.
 	tiles := map[string]Tile{
-		"s": {name: "s", shape: "rdrr", num_rotations: 4, num_flips: 2},
-		"y": {name: "y", shape: "rrdur", num_rotations: 4, num_flips: 2},
-		"z": {name: "z", shape: "rddr", num_rotations: 2, num_flips: 2},
-		"u": {name: "u", shape: "drru", num_rotations: 4, num_flips: 1},
-		"p": {name: "p", shape: "rdld", num_rotations: 4, num_flips: 2},
-		"l": {name: "l", shape: "dddr", num_rotations: 4, num_flips: 2},
-		"v": {name: "v", shape: "ddrr", num_rotations: 4, num_flips: 1},
-		"b": {name: "b", shape: "ddruu", num_rotations: 2, num_flips: 1},
+		"s": {name: "s", shape: "rdrr", numRotations: 4, numFlips: 2},
+		"y": {name: "y", shape: "rrdur", numRotations: 4, numFlips: 2},
+		"z": {name: "z", shape: "rddr", numRotations: 2, numFlips: 2},
+		"u": {name: "u", shape: "drru", numRotations: 4, numFlips: 1},
+		"p": {name: "p", shape: "rdld", numRotations: 4, numFlips: 2},
+		"l": {name: "l", shape: "dddr", numRotations: 4, numFlips: 2},
+		"v": {name: "v", shape: "ddrr", numRotations: 4, numFlips: 1},
+		"b": {name: "b", shape: "ddruu", numRotations: 2, numFlips: 1},
 	}
 	return tiles
 }
 
-func (t *Tile) rotate_cw(rotations uint) {
-	if rotations >= t.num_rotations {
+func (t *Tile) rotateCW(rotations uint) {
+	if rotations >= t.numRotations {
 		msg := fmt.Sprintf("Cannot rotate %s %d times", t.name, rotations)
 		panic(msg)
 	}
-	new_shape := ""
+	newShape := ""
 	for _, c := range t.shape {
 		var directions string
 		switch c {
@@ -47,28 +47,28 @@ func (t *Tile) rotate_cw(rotations uint) {
 		default:
 			panic("Invalid shape direction")
 		}
-		new_shape += string(directions[rotations])
+		newShape += string(directions[rotations])
 	}
-	t.shape = new_shape
+	t.shape = newShape
 }
 
 func (t *Tile) flip() {
-	new_shape := ""
+	newShape := ""
 	for _, c := range t.shape {
 		switch c {
 		case 'r':
-			new_shape += "l"
+			newShape += "l"
 		case 'd':
-			new_shape += "d"
+			newShape += "d"
 		case 'l':
-			new_shape += "r"
+			newShape += "r"
 		case 'u':
-			new_shape += "u"
+			newShape += "u"
 		default:
 			panic("Invalid shape direction")
 		}
 	}
-	t.shape = new_shape
+	t.shape = newShape
 }
 
 type Point struct {
@@ -76,54 +76,54 @@ type Point struct {
 	y int
 }
 
-func (t *Tile) get_points() []Point {
-	cur_point := Point{0, 0}
-	points := []Point{cur_point}
+func (t *Tile) getPoints() []Point {
+	curPoint := Point{0, 0}
+	points := []Point{curPoint}
 	for _, c := range t.shape {
 		switch c {
 		case 'r':
-			cur_point.x += 1
+			curPoint.x += 1
 		case 'l':
-			cur_point.x -= 1
+			curPoint.x -= 1
 		case 'd':
-			cur_point.y += 1
+			curPoint.y += 1
 		case 'u':
-			cur_point.y -= 1
+			curPoint.y -= 1
 		default:
 			panic("Invalid shape direction")
 		}
-		points = append(points, cur_point)
+		points = append(points, curPoint)
 	}
-	points = remove_duplicates(points)
-	points = shift_origin_topmost_leftmost(points)
+	points = removeDuplicates(points)
+	points = shiftOriginTopmostLeftmost(points)
 	return points
 }
 
-func remove_duplicates(points []Point) []Point {
+func removeDuplicates(points []Point) []Point {
 	found := make(map[Point]bool)
-	new_points := []Point{}
+	newPoints := []Point{}
 
 	for _, point := range points {
 		_, exists := found[point]
 		if !exists {
 			found[point] = true
-			new_points = append(new_points, point)
+			newPoints = append(newPoints, point)
 		}
 	}
-	return new_points
+	return newPoints
 }
 
-func shift_origin_topmost_leftmost(points []Point) []Point {
-	tl_point := Point{0, 0}
+func shiftOriginTopmostLeftmost(points []Point) []Point {
+	tlPoint := Point{0, 0}
 	for _, point := range points {
-		if point.y < tl_point.y || (point.y == tl_point.y && point.x < tl_point.x) {
-			tl_point = point
+		if point.y < tlPoint.y || (point.y == tlPoint.y && point.x < tlPoint.x) {
+			tlPoint = point
 		}
 	}
 	// Adjust every point's offset
 	for i := range points {
-		points[i].x -= tl_point.x
-		points[i].y -= tl_point.y
+		points[i].x -= tlPoint.x
+		points[i].y -= tlPoint.y
 	}
 	return points
 }

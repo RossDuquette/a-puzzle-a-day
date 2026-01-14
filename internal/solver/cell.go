@@ -1,23 +1,23 @@
 package solver
 
-const vacant_cell string = "vacant"
+const vacantCell string = "vacant"
 
 type Cell struct {
-	name       string
-	covered_by string
+	name      string
+	coveredBy string
 }
 
 func (c Cell) showing() string {
-	if c.covered_by == vacant_cell {
+	if c.coveredBy == vacantCell {
 		return c.name
 	}
-	return c.covered_by
+	return c.coveredBy
 }
 
-func (c Cell) is_free() bool {
-	return c.name != "" && c.covered_by == vacant_cell
+func (c Cell) isFree() bool {
+	return c.name != "" && c.coveredBy == vacantCell
 }
 
-func (c *Cell) set_vacant() {
-	c.covered_by = vacant_cell
+func (c *Cell) setVacant() {
+	c.coveredBy = vacantCell
 }
