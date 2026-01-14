@@ -11,7 +11,7 @@ func TestTileRotationV(t *testing.T) {
 
 	tests := []struct {
 		rotations uint
-		shape string
+		shape     string
 	}{
 		{0, "ddrr"},
 		{1, "lldd"},
@@ -40,7 +40,7 @@ func TestTileFlipY(t *testing.T) {
 	y := tiles["y"]
 
 	tests := []struct {
-		flip bool
+		flip  bool
 		shape string
 	}{
 		{false, "rrdur"},
@@ -67,8 +67,8 @@ func TestTileRotationFlipZ(t *testing.T) {
 
 	tests := []struct {
 		rotations uint
-		flip bool
-		shape string
+		flip      bool
+		shape     string
 	}{
 		{0, false, "rddr"},
 		{0, true, "lddl"},
@@ -110,7 +110,7 @@ func TestTilePointsP(t *testing.T) {
 	for i := range points {
 		if points[i] != expected_points[i] {
 			t.Errorf("Got point (%d, %d), expected (%d, %d)",
-					 points[i].x, points[i].y, expected_points[i].x, expected_points[i].y)
+				points[i].x, points[i].y, expected_points[i].x, expected_points[i].y)
 		}
 	}
 }
@@ -136,7 +136,7 @@ func TestTilePointsPRotated(t *testing.T) {
 	for i := range points {
 		if points[i] != expected_points[i] {
 			t.Errorf("Got point (%d, %d), expected (%d, %d)",
-					 points[i].x, points[i].y, expected_points[i].x, expected_points[i].y)
+				points[i].x, points[i].y, expected_points[i].x, expected_points[i].y)
 		}
 	}
 }

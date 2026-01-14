@@ -3,7 +3,7 @@ package solver
 const vacant_cell string = "vacant"
 
 type Cell struct {
-	name string
+	name       string
 	covered_by string
 }
 

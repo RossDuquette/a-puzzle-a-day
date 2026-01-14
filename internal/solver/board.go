@@ -6,27 +6,27 @@ import (
 
 const (
 	board_height int = 7
-	board_width int = 7
+	board_width  int = 7
 )
 
 type Board struct {
-	cells [board_height][board_width]Cell
+	cells          [board_height][board_width]Cell
 	solution_month string
-	solution_day string
+	solution_day   string
 }
 
 func create_board(month string, day string) Board {
 	var b Board
 	b.solution_month = month
 	b.solution_day = day
-	cell_names := [board_height][board_width]string {
-		{ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "" },
-		{ "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "" },
-		{ "01",  "02",  "03",  "04",  "05",  "06",  "07" },
-		{ "08",  "09",  "10",  "11",  "12",  "13",  "14" },
-		{ "15",  "16",  "17",  "18",  "19",  "20",  "21" },
-		{ "22",  "23",  "24",  "25",  "26",  "27",  "28" },
-		{ "29",  "30",  "31",  "",    "",    "",    "" },
+	cell_names := [board_height][board_width]string{
+		{"Jan", "Feb", "Mar", "Apr", "May", "Jun", ""},
+		{"Jul", "Aug", "Sep", "Oct", "Nov", "Dec", ""},
+		{"01", "02", "03", "04", "05", "06", "07"},
+		{"08", "09", "10", "11", "12", "13", "14"},
+		{"15", "16", "17", "18", "19", "20", "21"},
+		{"22", "23", "24", "25", "26", "27", "28"},
+		{"29", "30", "31", "", "", "", ""},
 	}
 	for row := range board_height {
 		for col := range board_width {
@@ -118,7 +118,7 @@ func (b Board) is_dead() bool {
 
 func (b Board) label_group(labels *[board_height][board_width]int, label int, row int, col int) {
 	if (row < 0) || (row >= board_height) || (col < 0) || (col >= board_width) ||
-			!b.cells[row][col].is_free() || (labels[row][col] != 0) {
+		!b.cells[row][col].is_free() || (labels[row][col] != 0) {
 		return
 	}
 
